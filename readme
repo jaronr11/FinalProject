@@ -1,0 +1,17 @@
+Game Structure
+- Classes:
+    - Room
+    - Character
+        - Heros, Enemies
+    - Maze
+    - Entity (weapons, health)
+    - Game
+
+Patterns:
+- Strategy
+    - AttackStrategy
+- Observer
+- Factory
+- Builder
+- Command
+    - player movement
