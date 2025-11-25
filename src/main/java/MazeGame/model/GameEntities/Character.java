@@ -1,3 +1,7 @@
+package MazeGame.model.GameEntities;
+
+import MazeGame.model.Position;
+
 public abstract class Character {
     protected double health;
     protected double damage;
@@ -10,13 +14,12 @@ public abstract class Character {
         this.health += health;
     }
 
-    protected void moveTo(Position position) {
-        this.position = position;
-    }
-
     public Position getPosition() {
         return position;
     }
+
+    public void setPosition(Position position) { this.position = position; }
+
 
     public double getHealth() {
         return health;

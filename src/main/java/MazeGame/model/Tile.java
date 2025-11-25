@@ -1,3 +1,5 @@
+package MazeGame.model;
+
 import java.awt.*;
 
 //code from https://codingtechroom.com/tutorial/java-how-to-use-tile-maps-for-building-engaging-game-levels-in-java
