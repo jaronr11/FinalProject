@@ -4,13 +4,12 @@ import MazeGame.model.Position;
 
 public abstract class Character {
     protected double health;
-    protected double damage;
     protected Position position;
 
-    protected void loseHealth(double health) {
+    public void loseHealth(double health) {
         this.health -= health;
     }
-    protected void gainHealth(double health) {
+    public void gainHealth(double health) {
         this.health += health;
     }
 
@@ -20,16 +19,12 @@ public abstract class Character {
 
     public void setPosition(Position position) { this.position = position; }
 
+    public boolean isAlive() {
+        return health >0;
+    }
 
     public double getHealth() {
         return health;
-    }
-    public double getDamage() {
-        return damage;
-    }
-
-    public void attack() {
-        System.out.println(damage);
     }
 
 }
