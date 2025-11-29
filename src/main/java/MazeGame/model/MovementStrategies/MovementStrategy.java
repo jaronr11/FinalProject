@@ -1,4 +1,4 @@
-package MazeGame.model.GameEntities;
+package MazeGame.model.MovementStrategies;
 
 import MazeGame.model.Direction;
 

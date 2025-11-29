@@ -1,6 +1,6 @@
-package MazeGame.model;
+package MazeGame.model.MovementStrategies;
 
-import MazeGame.model.GameEntities.MovementStrategy;
+import MazeGame.model.Direction;
 
 import java.util.Random;
 
