@@ -7,33 +7,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Projectile {
-    private Position position;
-    private Direction direction;
+    private double x;
+    private double y;
+    private double dx;
+    private double dy;
     private int speed = 1;
     private int damage = 1;
     private ProjectileOwner owner;
 
 
-    public Projectile(Position startPos, Direction direction, ProjectileOwner owner) {
-        this.position = new Position(startPos.getX(), startPos.getY());
-        this.direction = direction;
+    public Projectile(Position startPos, Position targetPos, ProjectileOwner owner) {
+        this.x = startPos.getX();
+        this.y = startPos.getY();
         this.owner = owner;
+
+        double xDiff = targetPos.getX() - startPos.getX();
+        double yDiff = targetPos.getY() - startPos.getY();
+
+        double distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+
+        if (distance != 0) {
+            this.dx = xDiff / distance;
+            this.dy = yDiff / distance;
+        }
+        else {
+            this.dx = 0;
+            this.dy = 0;
+        }
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
 
     public int getSpeed() {
         return speed;
     }
 
     public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
+        return new Position((int)x, (int)y);
     }
 
     public ProjectileOwner getOwner() {
@@ -45,19 +54,7 @@ public class Projectile {
     }
 
     public void move() {
-        switch (direction) {
-            case UP:
-                position.setY(position.getY() - speed);
-                break;
-            case DOWN:
-                position.setY(position.getY() + speed);
-                break;
-            case LEFT:
-                position.setX(position.getX() - speed);
-                break;
-            case RIGHT:
-                position.setX(position.getX() + speed);
-                break;
-        }
+        x+=dx;
+        y+=dy;
     }
 }

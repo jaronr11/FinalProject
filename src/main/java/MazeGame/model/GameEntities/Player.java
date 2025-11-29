@@ -10,8 +10,8 @@ public class Player extends Character {
     private List<Artifact> inventory;
     private Direction lastDirection;
 
-    public Player() {
-        this.position = new Position(0, 0);
+    public Player(Position startPos, double initialHealth) {
+        this.position = startPos;
         this.health = 10.0;
         this.lastDirection = Direction.DOWN;
     }
@@ -23,6 +23,5 @@ public class Player extends Character {
 
     @Override
     public void doAction(Room room, Character player) {
-        assert(1==1);
     }
 }

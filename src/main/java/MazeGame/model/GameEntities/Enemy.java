@@ -1,6 +1,8 @@
 package MazeGame.model.GameEntities;
 
 import MazeGame.model.*;
+import MazeGame.model.MovementStrategies.MovementStrategy;
+import MazeGame.model.MovementStrategies.RandomMoveStrategy;
 
 public class Enemy extends Character {
     MovementStrategy strategy;
@@ -23,28 +25,9 @@ public class Enemy extends Character {
         move(moveDir, room);
 
         if (Math.random() < 0.2) {
-            Direction playerTargetDir = getDirectionTowardPlayer(player);
             Position bulletStartPos = new Position(this.position.getX(), this.position.getY());
-            room.addProjectile(new Projectile(bulletStartPos, playerTargetDir, ProjectileOwner.ENEMY));
+            Position targetPos = player.getPosition();
+            room.addProjectile(new Projectile(bulletStartPos, targetPos, ProjectileOwner.ENEMY));
         }
     }
-
-    public Direction getDirectionTowardPlayer(Character player) {
-        Position playerPos = player.getPosition();
-        Position enemyPos = this.getPosition();
-
-        int dx = playerPos.getX() - enemyPos.getX();
-        int dy = playerPos.getY() - enemyPos.getY();
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0) { return Direction.RIGHT; }
-            else { return  Direction.LEFT; }
-        }
-        else {
-            if (dy > 0) { return Direction.DOWN; }
-            else { return  Direction.UP; }
-        }
-    }
-
-
 }

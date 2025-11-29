@@ -9,11 +9,7 @@ public class Maze {
     private final Room currentRoom;
     private final Character player;
 
-    public Maze() {
-        this.currentRoom = new Room();
-        this.player = new Player();
-    }
-    public Maze(Player player, Room room) {
+    public Maze(Character player, Room room) {
         this.currentRoom = room;
         this.player = player;
     }
@@ -41,9 +37,9 @@ public class Maze {
         }
     }
 
-    public void spawnPlayerProjectile(Direction direction) {
+    public void spawnPlayerProjectile(Position targetPos) {
         Position startPos = player.getPosition();
-        Projectile projectile = new Projectile(startPos, direction, ProjectileOwner.PLAYER);
+        Projectile projectile = new Projectile(startPos, targetPos, ProjectileOwner.PLAYER);
         currentRoom.addProjectile(projectile);
     }
 

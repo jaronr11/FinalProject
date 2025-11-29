@@ -12,15 +12,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
-public class GameView extends JPanel implements KeyListener {
+public class GameView extends JPanel implements KeyListener, MouseListener {
     Maze maze;
     int TILE_SIZE = 32;
     public GameView(Maze maze) {
         this.maze = maze;
         setFocusable(true);
         addKeyListener(this);
+        addMouseListener(this);
     }
 
     @Override
@@ -79,13 +82,38 @@ public class GameView extends JPanel implements KeyListener {
         else if (key == KeyEvent.VK_DOWN) {
             maze.movePlayer(Direction.DOWN);
         }
-        else if (key == KeyEvent.VK_SPACE) {
-            maze.spawnPlayerProjectile(maze.getPlayer().getLastDirection());
-        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int mouseX = e.getX();
+        int mouseY = e.getY();
+        Position targetPos = new Position(mouseX/TILE_SIZE, mouseY/TILE_SIZE);
+        maze.spawnPlayerProjectile(targetPos);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
