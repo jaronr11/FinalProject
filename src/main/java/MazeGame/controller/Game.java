@@ -1,9 +1,10 @@
 package MazeGame.controller;
 
+import MazeGame.model.GameEntities.CharacterFactory;
 import MazeGame.model.GameEntities.Enemy;
 import MazeGame.model.Maze;
 import MazeGame.model.Position;
-import MazeGame.model.RandomMoveStrategy;
+import MazeGame.model.MovementStrategies.RandomMoveStrategy;
 import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Room;
 import MazeGame.view.GameView;
@@ -13,7 +14,11 @@ import javax.swing.*;
 public class Game {
     private static Timer timer;
     public static void main(String[] args) {
-        Maze maze = new Maze();
+        CharacterFactory cf =  new CharacterFactory();
+        Position pos = new Position(0,0);
+        Character p1 = cf.createPlayer(pos, 10.0);
+        Room currentRoom = new Room();
+        Maze maze = new Maze(p1,currentRoom);
         Character e1 = new Enemy(new RandomMoveStrategy(), new Position(5,5), 10.0);
         Room room = maze.getCurrentRoom();
         room.addEnemy(e1);
