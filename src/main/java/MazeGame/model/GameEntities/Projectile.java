@@ -3,6 +3,9 @@ package MazeGame.model.GameEntities;
 import MazeGame.model.Direction;
 import MazeGame.model.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Projectile {
     private Position position;
     private Direction direction;
@@ -12,7 +15,7 @@ public class Projectile {
 
 
     public Projectile(Position startPos, Direction direction, ProjectileOwner owner) {
-        this.position = startPos;
+        this.position = new Position(startPos.getX(), startPos.getY());
         this.direction = direction;
         this.owner = owner;
     }
@@ -39,5 +42,22 @@ public class Projectile {
 
     public int getDamage() {
         return damage;
+    }
+
+    public void move() {
+        switch (direction) {
+            case UP:
+                position.setY(position.getY() - speed);
+                break;
+            case DOWN:
+                position.setY(position.getY() + speed);
+                break;
+            case LEFT:
+                position.setX(position.getX() - speed);
+                break;
+            case RIGHT:
+                position.setX(position.getX() + speed);
+                break;
+        }
     }
 }

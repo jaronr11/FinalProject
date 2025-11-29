@@ -2,6 +2,7 @@ package MazeGame.model.GameEntities;
 
 import MazeGame.model.Direction;
 import MazeGame.model.Position;
+import MazeGame.model.Room;
 
 import java.util.List;
 
@@ -12,13 +13,16 @@ public class Player extends Character {
     public Player() {
         this.position = new Position(0, 0);
         this.health = 10.0;
+        this.lastDirection = Direction.DOWN;
     }
 
     public void setLastDirection(Direction lastDirection) {
         this.lastDirection = lastDirection;
     }
 
-    public Direction getLastDirection() {
-        return lastDirection;
+
+    @Override
+    public void doAction(Room room, Character player) {
+        assert(1==1);
     }
 }

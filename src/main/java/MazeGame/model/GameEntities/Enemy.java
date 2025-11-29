@@ -1,12 +1,8 @@
 package MazeGame.model.GameEntities;
 
-import MazeGame.model.Direction;
-import MazeGame.model.Maze;
-import MazeGame.model.Position;
-import MazeGame.model.RandomMoveStrategy;
+import MazeGame.model.*;
 
 public class Enemy extends Character {
-    private double health;
     MovementStrategy strategy;
 
     private double DEFAULT_ENEMY_HEALTH = 5.0;
@@ -21,12 +17,34 @@ public class Enemy extends Character {
         this.position = position;
         this.health = health;
     }
+    @Override
+    public void doAction(Room room, Character player) {
+        Direction moveDir = strategy.move();
+        move(moveDir, room);
 
-    public void doAction(Maze maze) {
-        Direction move = strategy.move();
-        maze.moveCharacter(this, move);
-        Direction playerTargetDir = maze.getDirectionTowardPlayer(this);
-        maze.spawnEnemyProjectile(this, playerTargetDir);
+        if (Math.random() < 0.2) {
+            Direction playerTargetDir = getDirectionTowardPlayer(player);
+            Position bulletStartPos = new Position(this.position.getX(), this.position.getY());
+            room.addProjectile(new Projectile(bulletStartPos, playerTargetDir, ProjectileOwner.ENEMY));
+        }
     }
+
+    public Direction getDirectionTowardPlayer(Character player) {
+        Position playerPos = player.getPosition();
+        Position enemyPos = this.getPosition();
+
+        int dx = playerPos.getX() - enemyPos.getX();
+        int dy = playerPos.getY() - enemyPos.getY();
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 0) { return Direction.RIGHT; }
+            else { return  Direction.LEFT; }
+        }
+        else {
+            if (dy > 0) { return Direction.DOWN; }
+            else { return  Direction.UP; }
+        }
+    }
+
 
 }

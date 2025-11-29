@@ -4,6 +4,7 @@ import MazeGame.model.GameEntities.Enemy;
 import MazeGame.model.Maze;
 import MazeGame.model.Position;
 import MazeGame.model.RandomMoveStrategy;
+import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Room;
 import MazeGame.view.GameView;
 
@@ -13,7 +14,7 @@ public class Game {
     private static Timer timer;
     public static void main(String[] args) {
         Maze maze = new Maze();
-        Enemy e1 = new Enemy(new RandomMoveStrategy(), new Position(5,5), 10.0);
+        Character e1 = new Enemy(new RandomMoveStrategy(), new Position(5,5), 10.0);
         Room room = maze.getCurrentRoom();
         room.addEnemy(e1);
 
@@ -28,8 +29,7 @@ public class Game {
         //code from https://codingtechroom.com/tutorial/java-implementing-game-timers-java-2d-game-development
         int tickMillis = 200;
         timer = new Timer(tickMillis, e -> {
-            maze.updateEnemies();
-            maze.updateProjectiles();
+            maze.updateGame();
             if (!maze.isPlayerAlive()) {
                 timer.stop();
                 JOptionPane.showMessageDialog(frame, "Game Over!");

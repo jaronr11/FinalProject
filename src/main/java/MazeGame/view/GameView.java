@@ -6,7 +6,7 @@ import MazeGame.model.GameEntities.Projectile;
 import MazeGame.model.Maze;
 import MazeGame.model.Position;
 import MazeGame.model.Tile;
-import MazeGame.model.GameEntities.Enemy;
+import MazeGame.model.GameEntities.Character;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class GameView extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        List<Enemy> enemies = maze.getCurrentRoom().getEnemies();
+        List<Character> enemies = maze.getCurrentRoom().getEnemies();
         Position playerPos = maze.getPlayer().getPosition();
         Tile[][] map = maze.getCurrentRoom().getTiles();
         for (int row = 0; row < map.length; row++) {
@@ -45,7 +45,7 @@ public class GameView extends JPanel implements KeyListener {
         g.setColor(Color.BLUE);
         g.fillRect(playerPos.getX() *TILE_SIZE,playerPos.getY()*TILE_SIZE, TILE_SIZE, TILE_SIZE);
         g.setColor(Color.RED);
-        for (Enemy enemy : enemies) {
+        for (Character enemy : enemies) {
             Position pos = enemy.getPosition();
             g.fillRect(pos.getX() * TILE_SIZE,
                     pos.getY()*TILE_SIZE,  TILE_SIZE, TILE_SIZE);
@@ -82,8 +82,6 @@ public class GameView extends JPanel implements KeyListener {
         else if (key == KeyEvent.VK_SPACE) {
             maze.spawnPlayerProjectile(maze.getPlayer().getLastDirection());
         }
-        repaint();
-
     }
 
     @Override
