@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Maze {
-    private final Room currentRoom;
-    private final Character player;
+    private Room currentRoom;
+    private final Player player;
 
-    public Maze(Character player, Room room) {
+    public Maze(Player player, Room room) {
         this.currentRoom = room;
         this.player = player;
     }
@@ -31,16 +31,20 @@ public class Maze {
 
     public void updateGame() {
         currentRoom.update(player);
+        if (currentRoom.getDoor() != null) {
+            doorUpdate();
+        }
+    }
 
-        if (!player.isAlive()) {
-            System.out.println("Game over!");
+    void doorUpdate() {
+        Door door = currentRoom.getDoor();
+        if (currentRoom.positionsEqual(door.getPosition(), player.getPosition()) && door.isOpen()) {
+            currentRoom = currentRoom.getNextRoom();
         }
     }
 
     public void spawnPlayerProjectile(Position targetPos) {
-        Position startPos = player.getPosition();
-        Projectile projectile = new Projectile(startPos, targetPos, ProjectileOwner.PLAYER);
-        currentRoom.addProjectile(projectile);
+        player.shoot(targetPos,  currentRoom);
     }
 
 
