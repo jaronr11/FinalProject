@@ -21,10 +21,10 @@ public class Enemy extends Character {
     }
     @Override
     public void doAction(Room room, Character player) {
-        Direction moveDir = strategy.move();
+        Direction moveDir = strategy.move(position, player);
         move(moveDir, room);
 
-        if (Math.random() < 0.2) {
+        if (Math.random() < 0.2) { //rng
             Position bulletStartPos = new Position(this.position.getX(), this.position.getY());
             Position targetPos = player.getPosition();
             room.addProjectile(new Projectile(bulletStartPos, targetPos, ProjectileOwner.ENEMY));

@@ -4,7 +4,7 @@ import MazeGame.model.MovementStrategies.MovementStrategy;
 import MazeGame.model.Position;
 
 public class CharacterFactory {
-    public Character createPlayer(Position startPos, double health)
+    public Player createPlayer(Position startPos, double health)
     {
         return new Player(startPos, health);
     }
