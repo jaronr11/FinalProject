@@ -1,47 +1,49 @@
 package MazeGame.controller;
 
-import MazeGame.model.GameEntities.CharacterFactory;
-import MazeGame.model.GameEntities.Enemy;
+import MazeGame.model.GameEntities.*;
+import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Maze;
+import MazeGame.model.MovementStrategies.FollowMove;
 import MazeGame.model.Position;
 import MazeGame.model.MovementStrategies.RandomMoveStrategy;
-import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Room;
 import MazeGame.view.GameView;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
-    private static Timer timer;
     public static void main(String[] args) {
         CharacterFactory cf =  new CharacterFactory();
         Position pos = new Position(0,0);
-        Character p1 = cf.createPlayer(pos, 10.0);
-        Room currentRoom = new Room();
-        Maze maze = new Maze(p1,currentRoom);
-        Character e1 = new Enemy(new RandomMoveStrategy(), new Position(5,5), 10.0);
+        Player p1 = cf.createPlayer(pos, 1);
+        Room roomOne = new Room();
+        Position[] positions = {new  Position(0,5),new Position(3,0),new Position(7,4)};
+        Room roomTwo = new Room(positions);
+        roomOne.connectRoom(roomTwo);
+        Maze maze = new Maze(p1,roomOne);
+        Character e1 = new Enemy(new RandomMoveStrategy(), new Position(5,5), 1.0);
         Room room = maze.getCurrentRoom();
         room.addEnemy(e1);
+        Character e2 = new Enemy(new FollowMove(), new Position(5,5), 10.0 );
+        roomTwo.addEnemy(e2);
+
+        Weapon weapon = new Weapon(ProjectileFactory.ProjectileType.BURST_PROJECTILE, new Position(3,5));
+        room.addWeapon(weapon);
+
+        JFrame frame = new JFrame("EXAMPLE");
 
         GameView gv = new GameView(maze);
-        JFrame frame = new JFrame("EXAMPLE");
+        GameController gc = new GameController(maze, gv, frame);
+        gv.addKeyListener(gc);
+        gv.addMouseListener(gc);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gv);
-        frame.setSize(250, 250);
+        frame.setSize(500, 750);
         frame.setVisible(true);
         gv.requestFocusInWindow();
 
-        //code from https://codingtechroom.com/tutorial/java-implementing-game-timers-java-2d-game-development
-        int tickMillis = 200;
-        timer = new Timer(tickMillis, e -> {
-            maze.updateGame();
-            if (!maze.isPlayerAlive()) {
-                timer.stop();
-                JOptionPane.showMessageDialog(frame, "Game Over!");
-                return;
-            }
-            gv.repaint();
-        });
-        timer.start();
+       gc.startGame();
     }
 }
