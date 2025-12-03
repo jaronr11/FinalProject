@@ -16,6 +16,10 @@ public class Tile {
         return walkable;
     }
 
+    public void setWalkable(boolean walkable) {
+        this.walkable = walkable;
+    }
+
     public Image getTexture() {
         return texture;
     }
