@@ -11,8 +11,9 @@ public class Projectile {
     private double y;
     private double dx;
     private double dy;
-    private int speed = 1;
-    private int damage = 1;
+    private int speed = 2;
+    private double damage = 1;
+    private double size;
     private ProjectileOwner owner;
 
 
@@ -49,12 +50,27 @@ public class Projectile {
         return owner;
     }
 
-    public int getDamage() {
+    public double getDamage() {
         return damage;
     }
 
+    public void setDamage(double damage) {
+        this.damage *= damage;
+    }
+
+    public double getSize() {
+        return size;
+    }
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     public void move() {
-        x+=dx;
-        y+=dy;
+        x+=dx *speed;
+        y+=dy* speed;
     }
 }

@@ -8,6 +8,7 @@ public abstract class Character {
     protected double health;
     protected Position position;
     protected Direction lastDirection = Direction.DOWN;
+    protected ProjectileFactory.ProjectileType projectileType;
 
     public void loseHealth(double health) {
         this.health -= health;
@@ -53,7 +54,12 @@ public abstract class Character {
         return lastDirection;
     }
 
+    public void setProjectileType(ProjectileFactory.ProjectileType projectileType) {
+        this.projectileType = projectileType;
+    }
 
-
+    public ProjectileFactory.ProjectileType getProjectileType() {
+        return projectileType;
+    }
 
 }
