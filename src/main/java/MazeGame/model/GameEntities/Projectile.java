@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Projectile {
+    private final int DEFAULT_DAMAGE = 1;
+    private final int DEFAULT_SPEED = 2;
+    private final int DEFAULT_SIZE = 1;
     private double x;
     private double y;
     private double dx;
     private double dy;
-    private int speed = 2;
-    private double damage = 1;
-    private int size = 1;
-    private ProjectileOwner owner;
+    private int speed = DEFAULT_SPEED;
+    private double damage = DEFAULT_DAMAGE;
+    private double size = DEFAULT_SIZE;
+    private final ProjectileOwner owner;
 
 
     public Projectile(Position startPos, Position targetPos, ProjectileOwner owner) {
@@ -58,7 +61,7 @@ public class Projectile {
         this.damage *= damage;
     }
 
-    public int getSize() {
+    public double getSize() {
         return size;
     }
     public void setSize(int size) {

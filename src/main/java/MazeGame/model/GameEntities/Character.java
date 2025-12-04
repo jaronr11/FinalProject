@@ -39,6 +39,7 @@ public abstract class Character {
             case DOWN -> new Position(x, y + MOVE_DISTANCE);
             case LEFT -> new Position(x - MOVE_DISTANCE, y);
             case RIGHT -> new Position(x + MOVE_DISTANCE, y);
+            case NONE -> new Position(x, y);
         };
     }
     public void move(Direction direction, Room currentRoom) {

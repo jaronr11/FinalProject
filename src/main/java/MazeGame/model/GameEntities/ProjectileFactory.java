@@ -16,13 +16,13 @@ public class ProjectileFactory {
 
     public List<Projectile> createProjectiles(ProjectileType weaponType, Position startPos, Position targetPos, ProjectileOwner owner) {
         List<Projectile> projectiles = new ArrayList<>();
-        double HIGH_DAMAGE_MULTIPLIER = 2.5;
+        double HIGH_DAMAGE_MULTIPLIER = 2.25;
         int BIG_SIZE_MULTIPLIER = 2;
         int burstOffset = 5;
         int SLOW_PROJ_SPEED = 1;
 
         switch (weaponType) {
-            case  SLOW_PROJECTILE:
+            case SLOW_PROJECTILE:
                 Projectile slowProjectile = new Projectile(startPos, targetPos, owner);
                 slowProjectile.setSpeed(SLOW_PROJ_SPEED);
                 slowProjectile.setDamage(HIGH_DAMAGE_MULTIPLIER);

@@ -111,8 +111,10 @@ public class GameView extends JPanel {
         for (Projectile projectile : maze.getCurrentRoom().getProjectiles()) {
             double px =  projectile.getX() *TILE_SIZE;
             double py =   projectile.getY() *TILE_SIZE;
+            int drawSize = (int) (TILE_SIZE * projectile.getSize());
+            int offset = (drawSize-TILE_SIZE)/2;
             if (projectile.getOwner().equals(ProjectileOwner.PLAYER)) {
-                g.drawImage(projectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
+                g.drawImage(projectileFrames[currentFrame], (int) px - offset, (int) py -offset, drawSize, drawSize, null);
             }
             else {
                 g.drawImage(enemyProjectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
