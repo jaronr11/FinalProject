@@ -11,20 +11,75 @@ public class Room {
     private final int MAP_HEIGHT = 9;
     private final int MAP_WIDTH = 15;
     private final Tile[][] tiles = new Tile[MAP_HEIGHT][MAP_WIDTH];
-    private final List<Character> enemies = new ArrayList<>();
+    private List<Character> enemies = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
-    private final List<Weapon> weapons = new ArrayList<>();
+    private List<Weapon> weapons = new ArrayList<>();
+    private Position[] obstacles;
     private Door door;
     private Room nextLocation;
 
-    public Room() {
+
+    public static class Builder {
+        private List<Character> enemies =  new ArrayList<>();
+        private List<Weapon> weapons =  new ArrayList<>();
+        private Door door;
+        private Room nextLocation;
+        private Position[] obstacles;
+
+        public Builder addEnemies(List<Character> enemies) {
+            this.enemies.addAll(enemies);
+            return this;
+        }
+        public Builder addEnemy(Character enemy) {
+            this.enemies.add(enemy);
+            return this;
+        }
+
+        public Builder addObstacles(Position[] obstacles) {
+            this.obstacles = obstacles;
+            return this;
+        }
+
+        public Builder addWeapons(List<Weapon> weapons) {
+            this.weapons.addAll(weapons);
+            return this;
+        }
+
+        public Builder addWeapon(Weapon weapon) {
+            this.weapons.add(weapon);
+            return this;
+        }
+
+        public Builder addDoor(Door door) {
+            this.door = door;
+            return this;
+        }
+
+        public Room build() {
+            Room room;
+            if (obstacles == null || obstacles.length == 0) {
+                room = new Room();
+            }
+            else {
+                room = new Room(obstacles);
+            }
+            room.enemies = enemies;
+            room.weapons = weapons;
+            room.door = door;
+            room.nextLocation = nextLocation;
+            return room;
+        }
+
+    }
+
+    private Room() {
         for (int y=0; y<MAP_HEIGHT; y++) {
             for (int x=0; x<MAP_WIDTH; x++) {
                 tiles[y][x] = new Tile(null, true);
             }
         }
     }
-    public Room(Position[] obstacles) {
+    private Room(Position[] obstacles) {
         for (int y=0; y<MAP_HEIGHT; y++) {
             for (int x=0; x<MAP_WIDTH; x++) {
                     tiles[y][x] = new Tile(null, true);
@@ -36,22 +91,12 @@ public class Room {
         door = null;
     }
 
-    void generateDoor() {
-        Random rand = new Random();
-        Position randomPosition;
-        do {
-            randomPosition = new Position(rand.nextInt(MAP_WIDTH), rand.nextInt(MAP_HEIGHT));
-        } while (nextLocation.isWalkable(randomPosition));
-        door = new Door(randomPosition, nextLocation);
-    }
-
     public Door getDoor() {
         return door;
     }
 
     public void connectRoom(Room connectingRoom) {
         nextLocation = connectingRoom;
-        generateDoor();
     }
     public boolean isWalkable(Position position) {
         int x = position.x;
@@ -62,10 +107,10 @@ public class Room {
         return tiles[y][x].isWalkable();
     }
 
-    public int getMAP_HEIGHT() {
+    public int getMapHeight() {
         return MAP_HEIGHT;
     }
-    public int getMAP_WIDTH() {
+    public int getMapWidth() {
         return MAP_WIDTH;
     }
 
@@ -81,10 +126,6 @@ public class Room {
         enemies.remove(enemy);
     }
 
-    public void addEnemy(Character enemy) {
-        enemies.add(enemy);
-    }
-
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
@@ -98,18 +139,24 @@ public class Room {
     }
 
     private void updateEnemies(Character player) {
-        for (Character e : enemies) {
-            e.doAction(this, player);
+        for (Character enemy : enemies) {
+            enemy.doAction(this, player);
         }
     }
     private void updateProjectiles(Character player) {
         List<Projectile> toRemove = new ArrayList<>();
         for (Projectile projectile : projectiles) {
             projectile.move();
+            if (projectile.getX() < 0 || projectile.getX() >= getMapWidth() || projectile.getY() < 0 || projectile.getY() >= getMapHeight()) {
+                toRemove.add(projectile);
+                continue;
+            }
+
             if (!isWalkable(projectile.getPosition())) {
                 toRemove.add(projectile);
                 continue;
             }
+
             if (projectile.getOwner().equals(ProjectileOwner.ENEMY) && positionsEqual(projectile.getPosition(), player.getPosition())) {
                 player.loseHealth(projectile.getDamage());
                 toRemove.add(projectile);
@@ -158,10 +205,6 @@ public class Room {
 
     public Room getNextRoom() {
         return nextLocation;
-    }
-
-    public void addWeapon(Weapon weapon) {
-        weapons.add(weapon);
     }
 
     boolean positionsEqual(Position one, Position two) {
