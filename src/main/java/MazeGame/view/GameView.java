@@ -1,15 +1,16 @@
 package MazeGame.view;
 
 import MazeGame.model.*;
-import MazeGame.model.GameEntities.Projectile;
+import MazeGame.model.GameEntities.*;
 import MazeGame.model.GameEntities.Character;
-import MazeGame.model.GameEntities.ProjectileOwner;
-import MazeGame.model.GameEntities.Weapon;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.util.Iterator;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +27,7 @@ public class GameView extends JPanel {
     private BufferedImage[] enemyProjectileFrames;
     private BufferedImage[] enemyFrames;
     private BufferedImage[][] tileFrames;
+    private BufferedImage[] smokeFrames;
     BufferedImage obstacleSprite;
     BufferedImage doorSprite;
     BufferedImage doorOpenSprite;
@@ -49,6 +51,7 @@ public class GameView extends JPanel {
             obstacleSprite = loadSprite("images/obstacle.png");
             doorSprite = loadSprite("images/door.png");
             doorOpenSprite = loadSprite("images/doorOpen.png");
+
             SpriteSheet characterSheet = new SpriteSheet(characterSprite);
             SpriteSheet projectileSheet = new SpriteSheet(projectileSprite);
             SpriteSheet tileSheet = new SpriteSheet(tileSprite);
@@ -59,6 +62,7 @@ public class GameView extends JPanel {
             enemyFrames = new BufferedImage[4];
             projectileFrames = new BufferedImage[4];
             enemyProjectileFrames = new BufferedImage[4];
+            //load character and projectile frames
             for (int i =0; i<4; i++) {
                 characterFrames[i] = characterSheet.getFrame(i, characterRow, FRAME_W, FRAME_H);
                 projectileFrames[i] = projectileSheet.getFrame(i, 1, FRAME_W, FRAME_H);
@@ -68,11 +72,17 @@ public class GameView extends JPanel {
             int tileCols = tileSprite.getWidth()/FRAME_W;
             int tileRows = tileSprite.getHeight()/FRAME_H;
             tileFrames = new BufferedImage[tileRows][tileCols];
-
+            //load tile frames from sheet
             for (int i = 0; i<tileRows;i++) {
                 for (int j = 0; j<tileCols; j++) {
                     tileFrames[i][j] = tileSheet.getFrame(j,i,FRAME_W,FRAME_H);
                 }
+            }
+            //load smoke effects
+            smokeFrames = loadGifFrames("images/smoke.gif");
+            for (int i = 0; i<smokeFrames.length; i++) {
+                BufferedImage full = smokeFrames[i];
+                smokeFrames[i] = full.getSubimage(768,0,192,192);
             }
         }
         catch (IOException e) {
@@ -90,7 +100,7 @@ public class GameView extends JPanel {
         paintCharacters(g);
 
         paintProjectiles(g);
-
+        paintSmoke(g);
         paintItems(g);
         g.drawString(String.valueOf(maze.getPlayer().getHealth()), 400, 20);
 
@@ -171,16 +181,68 @@ public class GameView extends JPanel {
             g.fillOval(px, py, TILE_SIZE/2, TILE_SIZE/2);
         }
     }
+    public void paintSmoke(Graphics g) {
+        Room room = maze.getCurrentRoom();
+        List<SmokeEffect> smokeEffects = room.getSmokeEffects();
 
+        for (SmokeEffect smokeEffect : smokeEffects) {
+            int frameIndex = smokeEffect.getFrameIndex();
+            if (frameIndex < 0 || frameIndex >= smokeFrames.length) continue;
+
+            BufferedImage frame = smokeFrames[frameIndex];
+            Position pos = smokeEffect.getPosition();
+            int x  = pos.getX() * TILE_SIZE;
+            int y =  pos.getY() * TILE_SIZE;
+            g.drawImage(frame, x, y, TILE_SIZE+10, TILE_SIZE+10, null);
+
+        }
+    }
     public void updateFrames() {
         tick++;
         if (tick >= FRAME_SPEED) {
             tick = 0;
             currentFrame = (currentFrame + 1) % characterFrames.length;
+
+            Room room = maze.getCurrentRoom();
+            for (SmokeEffect smokeEffect : room.getSmokeEffects()) {
+                smokeEffect.nextFrame(smokeFrames.length);
+            }
+            room.removeSmokeEffects();
         }
     }
     public int getTileSize() {
         return TILE_SIZE;
     }
+    //Load gif frames code from AI
+    private BufferedImage[] loadGifFrames(String filePath) throws IOException {
+        File file = new File(filePath);
+        ImageInputStream stream = ImageIO.createImageInputStream(file);
+
+        if (stream == null) {
+            throw new IOException("Could not open " + filePath);
+        }
+
+        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("gif");
+        if (!readers.hasNext()) {
+            stream.close();
+            throw new IOException("No GIF reader available");
+        }
+
+        ImageReader reader = readers.next();
+        reader.setInput(stream);
+
+        int numFrames = reader.getNumImages(true);
+        BufferedImage[] frames = new BufferedImage[numFrames];
+
+        for (int i = 0; i < numFrames; i++) {
+            frames[i] = reader.read(i);  // each frame is a full image
+        }
+
+        reader.dispose();
+        stream.close();
+
+        return frames;
+    }
+
 
 }

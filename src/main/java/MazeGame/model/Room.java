@@ -14,6 +14,7 @@ public class Room {
     private List<Character> enemies = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private List<Weapon> weapons = new ArrayList<>();
+    private final List<SmokeEffect> smokeEffects = new ArrayList<>();
     private Position[] obstacles;
     private Door door;
     private Room nextLocation;
@@ -22,8 +23,8 @@ public class Room {
 
 
     public static class Builder {
-        private List<Character> enemies =  new ArrayList<>();
-        private List<Weapon> weapons =  new ArrayList<>();
+        private final List<Character> enemies =  new ArrayList<>();
+        private final List<Weapon> weapons =  new ArrayList<>();
         private Door door;
         private Room nextLocation;
         private Position[] obstacles;
@@ -175,7 +176,14 @@ public class Room {
         projectiles.removeAll(toRemove);
     }
     public void removeDeadEnemies() {
-        enemies.removeIf(character -> !character.isAlive());
+        List<Character> deadEnemies = new ArrayList<>();
+        for (Character enemy : enemies) {
+            if (!enemy.isAlive()) {
+                deadEnemies.add(enemy);
+                smokeEffects.add(new SmokeEffect(enemy.getPosition()));
+            }
+        }
+        enemies.removeAll(deadEnemies);
     }
 
     public void checkDoorState() {
@@ -223,6 +231,19 @@ public class Room {
 
         return Math.abs(dx) <= halfSize && Math.abs(dy) <= halfSize;
     }
+
+    public List<SmokeEffect> getSmokeEffects() {
+        return smokeEffects;
+    }
+
+    public void addSmokeEffect(SmokeEffect smokeEffect) {
+        smokeEffects.add(smokeEffect);
+    }
+
+    public void removeSmokeEffects() {
+        smokeEffects.removeIf(SmokeEffect::isFinished);
+    }
+
 
     public int getTileRow(int row, int col) {
         return tileSpriteRow[row][col];
