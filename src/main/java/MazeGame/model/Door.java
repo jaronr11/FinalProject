@@ -6,6 +6,12 @@ public class Door {
     private Position nextLocationPos;
     private boolean isOpen;
 
+    public Door(Position position) {
+        this.position = position;
+        this.nextLocation = null;
+        this.isOpen = false;
+    }
+
     public Door(Position position, Room nextLocation) {
         this.position = position;
         this.nextLocation = nextLocation;
