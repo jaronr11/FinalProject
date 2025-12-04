@@ -5,17 +5,10 @@ import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Position;
 
 public class FollowMove implements MovementStrategy {
-    private int moveCooldown = 0;
-    private int moveDelay = 1;
+
 
     @Override
     public Direction move(Position startPos, Character player) {
-        if (moveCooldown > 0) {
-            moveCooldown--;
-            return Direction.NONE;
-        }
-        moveCooldown = moveDelay;
-
         int playerX = player.getPosition().getX();
         int playerY = player.getPosition().getY();
 

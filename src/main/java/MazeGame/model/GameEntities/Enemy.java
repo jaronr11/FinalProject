@@ -6,6 +6,8 @@ import MazeGame.model.MovementStrategies.RandomMoveStrategy;
 
 public class Enemy extends Character {
     MovementStrategy strategy;
+    private int moveCooldown = 0;
+    private int moveDelay = 1;
 
     private double DEFAULT_ENEMY_HEALTH = 5.0;
 
@@ -21,7 +23,12 @@ public class Enemy extends Character {
     }
     @Override
     public void doAction(Room room, Character player) {
-
+        if (moveCooldown > 0) {
+            moveCooldown--;
+            shootProjectile(room, player);
+            return;
+        }
+        moveCooldown = moveDelay;
         Direction moveDir = strategy.move(position, player);
 
         move(moveDir, room);
