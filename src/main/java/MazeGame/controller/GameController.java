@@ -18,6 +18,8 @@ public class GameController implements KeyListener, MouseListener {
     GameView gameView;
     private Timer timer;
     JFrame frame;
+    int cooldown = 0;
+    int delay = 1;
 
     public GameController(Maze maze, GameView gameView, JFrame frame) {
         this.maze = maze;
@@ -76,6 +78,11 @@ public class GameController implements KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (cooldown > 0) {
+            cooldown--;
+            return;
+        }
+        cooldown = delay;
         int mouseX = e.getX();
         int mouseY = e.getY();
         Position targetPos = new Position(mouseX/gameView.getTileSize(), mouseY/gameView.getTileSize());

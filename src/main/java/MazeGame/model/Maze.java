@@ -22,9 +22,6 @@ public class Maze {
     public void movePlayer(Direction direction) {
         player.move(direction, currentRoom);
     }
-    public void moveCharacter(Character character, Direction direction) {
-        character.move(direction, currentRoom);
-    }
     public Character getPlayer() {
         return player;
     }

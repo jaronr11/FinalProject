@@ -21,7 +21,9 @@ public abstract class Character {
     public Position getPosition() {
         return position;
     }
-
+    public void setPosition(Position position) {
+        this.position = position;
+    }
     public boolean isAlive() {
         return health >0;
     }

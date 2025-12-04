@@ -11,6 +11,7 @@ public class ProjectileFactory {
         NORMAL_PROJECTILE,
         BURST_PROJECTILE,
         SLOW_PROJECTILE,
+        GOD_MODE
     }
 
 
@@ -19,7 +20,7 @@ public class ProjectileFactory {
         double HIGH_DAMAGE_MULTIPLIER = 2.25;
         int BIG_SIZE_MULTIPLIER = 2;
         int burstOffset = 5;
-        int SLOW_PROJ_SPEED = 1;
+        double SLOW_PROJ_SPEED = .75;
 
         switch (weaponType) {
             case SLOW_PROJECTILE:
@@ -41,6 +42,14 @@ public class ProjectileFactory {
             case NORMAL_PROJECTILE:
                 projectiles.add(new Projectile(startPos, targetPos, owner));
                 break;
+            case GOD_MODE:
+                Projectile projectile =  new Projectile(startPos, targetPos, owner);
+                projectile.setSpeed(3);
+                projectile.setDamage(100);
+                projectile.setSize(4);
+                projectiles.add(projectile);
+                break;
+
         }
         return projectiles;
     }
