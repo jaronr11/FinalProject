@@ -3,6 +3,7 @@ package MazeGame.view;
 import MazeGame.model.*;
 import MazeGame.model.GameEntities.Projectile;
 import MazeGame.model.GameEntities.Character;
+import MazeGame.model.GameEntities.ProjectileOwner;
 import MazeGame.model.GameEntities.Weapon;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,8 @@ public class GameView extends JPanel {
 
     private BufferedImage[] characterFrames;
     private BufferedImage[] projectileFrames;
+    private BufferedImage[] enemyProjectileFrames;
+    private BufferedImage[] enemyFrames;
     private int currentFrame = 0;
     private int tick = 0;
     private static final int FRAME_SPEED = 1;
@@ -33,17 +36,22 @@ public class GameView extends JPanel {
         BufferedImage characterSprite;
         BufferedImage projectileSprite;
         try {
-            projectileSprite = loadSprite("images/bullet.png");
+            projectileSprite = loadSprite("images/projectile.png");
             characterSprite =  loadSprite("images/character.png");
             SpriteSheet characterSheet = new SpriteSheet(characterSprite);
             SpriteSheet projectileSheet = new SpriteSheet(projectileSprite);
 
             int characterRow = 2;
+            int enemyRow = 1;
             characterFrames = new BufferedImage[4];
+            enemyFrames = new BufferedImage[4];
             projectileFrames = new BufferedImage[4];
+            enemyProjectileFrames = new BufferedImage[4];
             for (int i =0; i<4; i++) {
                 characterFrames[i] = characterSheet.getFrame(i, characterRow, FRAME_W, FRAME_H);
-                projectileFrames[i] = projectileSheet.getFrame(i, 0, FRAME_W, FRAME_H);
+                projectileFrames[i] = projectileSheet.getFrame(i, 1, FRAME_W, FRAME_H);
+                enemyFrames[i] = characterSheet.getFrame(i, enemyRow, FRAME_W, FRAME_H);
+                enemyProjectileFrames[i] = projectileSheet.getFrame(i,0,FRAME_W,FRAME_H);
             }
 
         }
@@ -103,7 +111,12 @@ public class GameView extends JPanel {
         for (Projectile projectile : maze.getCurrentRoom().getProjectiles()) {
             double px =  projectile.getX() *TILE_SIZE;
             double py =   projectile.getY() *TILE_SIZE;
-            g.drawImage(projectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
+            if (projectile.getOwner().equals(ProjectileOwner.PLAYER)) {
+                g.drawImage(projectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
+            }
+            else {
+                g.drawImage(enemyProjectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
+            }
         }
     }
 
@@ -120,9 +133,10 @@ public class GameView extends JPanel {
         g.drawImage(characterFrames[currentFrame],px - offset,py-offset, drawSize, drawSize, null);
         g.setColor(Color.RED);
         for (Character enemy : enemies) {
-            Position pos = enemy.getPosition();
-            g.fillRect(pos.getX() * TILE_SIZE,
-                    pos.getY()*TILE_SIZE,  TILE_SIZE, TILE_SIZE);
+            Position enemyPos = enemy.getPosition();
+            int enemyPosX = enemyPos.getX() * TILE_SIZE;
+            int enemyPosY = enemyPos.getY() * TILE_SIZE;
+            g.drawImage(enemyFrames[currentFrame], enemyPosX - offset, enemyPosY - offset, drawSize, drawSize, null);
         }
 
     }
