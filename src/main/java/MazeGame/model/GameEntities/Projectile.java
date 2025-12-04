@@ -8,13 +8,13 @@ import java.util.List;
 
 public class Projectile {
     private final int DEFAULT_DAMAGE = 1;
-    private final int DEFAULT_SPEED = 2;
+    private final double DEFAULT_SPEED = 1;
     private final int DEFAULT_SIZE = 1;
     private double x;
     private double y;
     private double dx;
     private double dy;
-    private int speed = DEFAULT_SPEED;
+    private double speed = DEFAULT_SPEED;
     private double damage = DEFAULT_DAMAGE;
     private double size = DEFAULT_SIZE;
     private final ProjectileOwner owner;
@@ -41,7 +41,7 @@ public class Projectile {
     }
 
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -68,7 +68,7 @@ public class Projectile {
         this.size = size;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
