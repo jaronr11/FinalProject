@@ -1,10 +1,6 @@
 package MazeGame.model.GameEntities;
 
-import MazeGame.model.Direction;
 import MazeGame.model.Position;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Projectile {
     private final int DEFAULT_DAMAGE = 1;

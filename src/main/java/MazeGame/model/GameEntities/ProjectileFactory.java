@@ -1,6 +1,5 @@
 package MazeGame.model.GameEntities;
 
-import MazeGame.model.Room;
 import MazeGame.model.Position;
 
 import java.util.ArrayList;

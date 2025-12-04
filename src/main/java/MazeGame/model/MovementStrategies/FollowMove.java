@@ -18,10 +18,10 @@ public class FollowMove implements MovementStrategy {
         int dx = enemyX-playerX;
         int dy = enemyY-playerY;
 
-        if (dx > 0) return Direction.LEFT;
         if (dy > 0) return Direction.UP;
-        if (dx < 0) return Direction.RIGHT;
         if (dy < 0) return Direction.DOWN;
+        if (dx < 0) return Direction.RIGHT;
+        if (dx > 0) return Direction.LEFT;
         return Direction.UP;
     }
 }
