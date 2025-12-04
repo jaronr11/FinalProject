@@ -8,12 +8,7 @@ public class Door {
         this.position = position;
         this.isOpen = false;
     }
-
-    public Door(Position position, Room nextLocation) {
-        this.position = position;
-        this.isOpen = false;
-    }
-
+    
     public void open() {
         this.isOpen = true;
     }

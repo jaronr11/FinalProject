@@ -2,9 +2,6 @@ package MazeGame.model;
 import MazeGame.model.GameEntities.*;
 import MazeGame.model.GameEntities.Character;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Maze {
     private Room currentRoom;
     private final Player player;

@@ -7,9 +7,9 @@ import MazeGame.model.MovementStrategies.RandomMoveStrategy;
 public class Enemy extends Character {
     MovementStrategy strategy;
     private int moveCooldown = 0;
-    private int moveDelay = 1;
+    private final int moveDelay = 1;
 
-    private double DEFAULT_ENEMY_HEALTH = 5.0;
+    private final double DEFAULT_ENEMY_HEALTH = 5.0;
 
     public Enemy() {
         this.strategy = new RandomMoveStrategy();

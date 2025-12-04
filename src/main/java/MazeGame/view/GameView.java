@@ -100,7 +100,7 @@ public class GameView extends JPanel {
         Room room = maze.getCurrentRoom();
         Door door =  maze.getCurrentRoom().getDoor();
         if (door == null) {
-            door = new Door(new Position(0,0), null);
+            door = new Door(new Position(0,0));
         }
         Position doorPos = door.getPosition();
         int doorX = doorPos.getX();
