@@ -17,6 +17,8 @@ public class Room {
     private Position[] obstacles;
     private Door door;
     private Room nextLocation;
+    private int[][] tileSpriteRow;
+    private int[][] tileSpriteCol;
 
 
     public static class Builder {
@@ -157,13 +159,13 @@ public class Room {
                 continue;
             }
 
-            if (projectile.getOwner().equals(ProjectileOwner.ENEMY) && positionsEqual(projectile.getPosition(), player.getPosition())) {
+            if (projectile.getOwner().equals(ProjectileOwner.ENEMY) && projectileHitCharacter(projectile, player)) {
                 player.loseHealth(projectile.getDamage());
                 toRemove.add(projectile);
             }
             else if (projectile.getOwner().equals(ProjectileOwner.PLAYER)) {
                 for (Character enemy : enemies) {
-                    if (positionsEqual(projectile.getPosition(), enemy.getPosition())) {
+                    if (projectileHitCharacter(projectile, enemy)) {
                         enemy.loseHealth(projectile.getDamage());
                         toRemove.add(projectile);
                     }
@@ -211,4 +213,35 @@ public class Room {
         return one.getX() == two.getX() && one.getY() == two.getY();
     }
 
+    boolean projectileHitCharacter(Projectile projectile, Character character) {
+        Position charPos = character.getPosition();
+        Position projPos = projectile.getPosition();
+
+        double dx  = projPos.getX() - charPos.getX();
+        double dy  = projPos.getY() - charPos.getY();
+        double halfSize = projectile.getSize()/2.0;
+
+        return Math.abs(dx) <= halfSize && Math.abs(dy) <= halfSize;
+    }
+
+    public int getTileRow(int row, int col) {
+        return tileSpriteRow[row][col];
+    }
+
+    public int getTileCol(int row, int col) {
+        return tileSpriteCol[row][col];
+    }
+
+    public void generateRandomTiles(int maxRows, int maxCols) {
+        tileSpriteRow = new int[MAP_HEIGHT][MAP_WIDTH];
+        tileSpriteCol = new int[MAP_HEIGHT][MAP_WIDTH];
+
+        Random rand = new Random();
+        for (int row = 0; row < MAP_HEIGHT; row++) {
+            for (int col = 0; col < MAP_WIDTH; col++) {
+                tileSpriteRow[row][col] = rand.nextInt(maxRows);
+                tileSpriteCol[row][col] = rand.nextInt(maxCols);
+            }
+        }
+    }
 }

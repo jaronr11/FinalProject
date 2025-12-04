@@ -22,7 +22,8 @@ public class GameFacade {
     private GameController gameController;
     private JFrame frame;
     CharacterFactory characterFactory = new CharacterFactory();
-
+    private static final int TILE_ROWS = 2;
+    private static final int TILE_COLS = 1;
 
     public void startGame() {
         createModel();
@@ -36,8 +37,12 @@ public class GameFacade {
         Player p1 = characterFactory.createPlayer(pos, 10);
 
         Room roomOne = buildRoomOne();
+        roomOne.generateRandomTiles(TILE_ROWS, TILE_COLS);
         Room roomTwo = buildRoomTwo();
+        roomTwo.generateRandomTiles(TILE_ROWS, TILE_COLS);
         Room roomThree = buildRoomThree();
+        roomThree.generateRandomTiles(TILE_ROWS, TILE_COLS);
+
         roomOne.connectRoom(roomTwo);
         roomTwo.connectRoom(roomThree);
 

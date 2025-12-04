@@ -25,6 +25,12 @@ public class GameView extends JPanel {
     private BufferedImage[] projectileFrames;
     private BufferedImage[] enemyProjectileFrames;
     private BufferedImage[] enemyFrames;
+    private BufferedImage[][] tileFrames;
+    BufferedImage obstacleSprite;
+    BufferedImage doorSprite;
+    BufferedImage doorOpenSprite;
+
+
     private int currentFrame = 0;
     private int tick = 0;
     private static final int FRAME_SPEED = 1;
@@ -32,14 +38,20 @@ public class GameView extends JPanel {
     public GameView(Maze maze) {
 
         this.maze = maze;
-        //private final BufferedImage tileSprite;
         BufferedImage characterSprite;
         BufferedImage projectileSprite;
+        BufferedImage tileSprite;
+
         try {
             projectileSprite = loadSprite("images/projectile.png");
             characterSprite =  loadSprite("images/character.png");
+            tileSprite = loadSprite("images/tiles.png");
+            obstacleSprite = loadSprite("images/obstacle.png");
+            doorSprite = loadSprite("images/door.png");
+            doorOpenSprite = loadSprite("images/doorOpen.png");
             SpriteSheet characterSheet = new SpriteSheet(characterSprite);
             SpriteSheet projectileSheet = new SpriteSheet(projectileSprite);
+            SpriteSheet tileSheet = new SpriteSheet(tileSprite);
 
             int characterRow = 2;
             int enemyRow = 1;
@@ -53,7 +65,15 @@ public class GameView extends JPanel {
                 enemyFrames[i] = characterSheet.getFrame(i, enemyRow, FRAME_W, FRAME_H);
                 enemyProjectileFrames[i] = projectileSheet.getFrame(i,0,FRAME_W,FRAME_H);
             }
+            int tileCols = tileSprite.getWidth()/FRAME_W;
+            int tileRows = tileSprite.getHeight()/FRAME_H;
+            tileFrames = new BufferedImage[tileRows][tileCols];
 
+            for (int i = 0; i<tileRows;i++) {
+                for (int j = 0; j<tileCols; j++) {
+                    tileFrames[i][j] = tileSheet.getFrame(j,i,FRAME_W,FRAME_H);
+                }
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -75,9 +95,9 @@ public class GameView extends JPanel {
         g.drawString(String.valueOf(maze.getPlayer().getHealth()), 400, 20);
 
     }
-
     public void paintMap(Graphics g) {
         Tile[][] map = maze.getCurrentRoom().getTiles();
+        Room room = maze.getCurrentRoom();
         Door door =  maze.getCurrentRoom().getDoor();
         if (door == null) {
             door = new Door(new Position(0,0), null);
@@ -88,23 +108,22 @@ public class GameView extends JPanel {
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map[row].length; col++) {
                 Tile tile = map[row][col];
+                int spriteRow = room.getTileRow(row,col);
+                int spriteCol = room.getTileCol(row,col);
+                BufferedImage tileSprite = tileFrames[spriteRow][spriteCol];
                 if (tile.isWalkable()) {
-                    g.setColor(Color.WHITE);
-                    g.fillRect(col*TILE_SIZE, row*TILE_SIZE,  TILE_SIZE, TILE_SIZE);
+                    g.drawImage(tileSprite, col*TILE_SIZE, row*TILE_SIZE,  null);
                 }
                 else {
-                    g.setColor(Color.BLACK);
-                    g.fillRect(col*TILE_SIZE, row*TILE_SIZE,  TILE_SIZE, TILE_SIZE);
+                    g.drawImage(obstacleSprite, col*TILE_SIZE, row*TILE_SIZE, null);
                 }
             }
         }
         if (door.isOpen()) {
-            g.setColor(Color.GREEN);
-            g.fillArc(doorX*TILE_SIZE, doorY*TILE_SIZE, TILE_SIZE, TILE_SIZE, 90, 180);
+            g.drawImage(doorOpenSprite,doorX*TILE_SIZE, doorY*TILE_SIZE, null);
         }
         else {
-            g.setColor(Color.RED);
-            g.fillArc(doorX*TILE_SIZE, doorY*TILE_SIZE, TILE_SIZE, TILE_SIZE, 90, 180);
+            g.drawImage(doorSprite,doorX*TILE_SIZE, doorY*TILE_SIZE, null);
         }
     }
     public void paintProjectiles(Graphics g) {
