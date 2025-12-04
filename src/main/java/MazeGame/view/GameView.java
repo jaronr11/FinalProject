@@ -5,15 +5,53 @@ import MazeGame.model.GameEntities.Projectile;
 import MazeGame.model.GameEntities.Character;
 import MazeGame.model.GameEntities.Weapon;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class GameView extends JPanel {
     Maze maze;
     int TILE_SIZE = 32;
+
+    private static final int FRAME_W = 32;
+    private static final int FRAME_H = 32;
+
+    private BufferedImage[] characterFrames;
+    private BufferedImage[] projectileFrames;
+    private int currentFrame = 0;
+    private int tick = 0;
+    private static final int FRAME_SPEED = 1;
+
     public GameView(Maze maze) {
+
         this.maze = maze;
+        //private final BufferedImage tileSprite;
+        BufferedImage characterSprite;
+        BufferedImage projectileSprite;
+        try {
+            projectileSprite = loadSprite("images/bullet.png");
+            characterSprite =  loadSprite("images/character.png");
+            SpriteSheet characterSheet = new SpriteSheet(characterSprite);
+            SpriteSheet projectileSheet = new SpriteSheet(projectileSprite);
+
+            int characterRow = 2;
+            characterFrames = new BufferedImage[4];
+            projectileFrames = new BufferedImage[4];
+            for (int i =0; i<4; i++) {
+                characterFrames[i] = characterSheet.getFrame(i, characterRow, FRAME_W, FRAME_H);
+                projectileFrames[i] = projectileSheet.getFrame(i, 0, FRAME_W, FRAME_H);
+            }
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            projectileSprite = null;
+            characterSprite = null;
+        }
         setFocusable(true);
     }
 
@@ -22,7 +60,9 @@ public class GameView extends JPanel {
         super.paintComponent(g);
         paintMap(g);
         paintCharacters(g);
+
         paintProjectiles(g);
+
         paintItems(g);
         g.drawString(String.valueOf(maze.getPlayer().getHealth()), 400, 20);
 
@@ -61,17 +101,23 @@ public class GameView extends JPanel {
     }
     public void paintProjectiles(Graphics g) {
         for (Projectile projectile : maze.getCurrentRoom().getProjectiles()) {
-            Position pos = projectile.getPosition();
-            int px =  pos.getX() *TILE_SIZE;
-            int py =   pos.getY() *TILE_SIZE;
-            g.fillOval(px, py, TILE_SIZE/2, TILE_SIZE/2);
+            double px =  projectile.getX() *TILE_SIZE;
+            double py =   projectile.getY() *TILE_SIZE;
+            g.drawImage(projectileFrames[currentFrame], (int) px, (int) py, (TILE_SIZE), (TILE_SIZE), null);
         }
+    }
+
+    BufferedImage loadSprite(String filePath) throws IOException {
+        return ImageIO.read(new File(filePath));
     }
     public void paintCharacters(Graphics g) {
         List<Character> enemies = maze.getCurrentRoom().getEnemies();
         Position playerPos = maze.getPlayer().getPosition();
-        g.setColor(Color.BLUE);
-        g.fillRect(playerPos.getX() *TILE_SIZE,playerPos.getY()*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        int px = playerPos.getX() * TILE_SIZE;
+        int py = playerPos.getY() * TILE_SIZE;
+        int drawSize = (int) (TILE_SIZE * 1.7);
+        int offset = (drawSize-TILE_SIZE)/2;
+        g.drawImage(characterFrames[currentFrame],px - offset,py-offset, drawSize, drawSize, null);
         g.setColor(Color.RED);
         for (Character enemy : enemies) {
             Position pos = enemy.getPosition();
@@ -90,6 +136,13 @@ public class GameView extends JPanel {
         }
     }
 
+    public void updateFrames() {
+        tick++;
+        if (tick >= FRAME_SPEED) {
+            tick = 0;
+            currentFrame = (currentFrame + 1) % characterFrames.length;
+        }
+    }
     public int getTileSize() {
         return TILE_SIZE;
     }

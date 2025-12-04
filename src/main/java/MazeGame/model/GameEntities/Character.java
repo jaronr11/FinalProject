@@ -9,6 +9,7 @@ public abstract class Character {
     protected Position position;
     protected Direction lastDirection = Direction.DOWN;
     protected ProjectileFactory.ProjectileType projectileType;
+    protected final int MOVE_DISTANCE = 1;
 
     public void loseHealth(double health) {
         this.health -= health;
@@ -34,10 +35,10 @@ public abstract class Character {
         int x =  currentPos.getX();
         int y =  currentPos.getY();
         return switch (direction) {
-            case UP -> new Position(x, y - 1);
-            case DOWN -> new Position(x, y + 1);
-            case LEFT -> new Position(x - 1, y);
-            case RIGHT -> new Position(x + 1, y);
+            case UP -> new Position(x, y - MOVE_DISTANCE);
+            case DOWN -> new Position(x, y + MOVE_DISTANCE);
+            case LEFT -> new Position(x - MOVE_DISTANCE, y);
+            case RIGHT -> new Position(x + MOVE_DISTANCE, y);
         };
     }
     public void move(Direction direction, Room currentRoom) {
@@ -48,11 +49,7 @@ public abstract class Character {
         }
     }
 
-    public abstract void doAction(Room room, Character player);
-
-    public Direction getLastDirection() {
-        return lastDirection;
-    }
+    public abstract void doAction(Room room, Character character);
 
     public void setProjectileType(ProjectileFactory.ProjectileType projectileType) {
         this.projectileType = projectileType;

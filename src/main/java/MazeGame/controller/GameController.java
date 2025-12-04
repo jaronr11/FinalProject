@@ -30,6 +30,7 @@ public class GameController implements KeyListener, MouseListener {
         int tickMillis = 200;
         timer = new Timer(tickMillis, e -> {
             maze.updateGame();
+            gameView.updateFrames();
             if (!maze.isPlayerAlive()) {
                 timer.stop();
                 JOptionPane.showMessageDialog(frame, "Game Over!");
