@@ -14,12 +14,12 @@ import java.awt.event.MouseListener;
 import java.awt.*;
 
 public class GameController implements KeyListener, MouseListener {
-    Maze maze;
-    GameView gameView;
+    private final Maze maze;
+    private final GameView gameView;
     private Timer timer;
-    JFrame frame;
-    int cooldown = 0;
-    int delay = 1;
+    private final JFrame frame;
+    private int cooldown = 0;
+    private static final int ATTACK_COOLDOWN_TICKS = 1;
 
     public GameController(Maze maze, GameView gameView, JFrame frame) {
         this.maze = maze;
@@ -30,19 +30,28 @@ public class GameController implements KeyListener, MouseListener {
     public void startGame() {
         //code from https://codingtechroom.com/tutorial/java-implementing-game-timers-java-2d-game-development
         int tickMillis = 200;
-        timer = new Timer(tickMillis, e -> {
-            maze.updateGame();
-            gameView.updateFrames();
-            if (!maze.isPlayerAlive()) {
-                timer.stop();
-                JOptionPane.showMessageDialog(frame, "Game Over!");
-                return;
-            }
-            gameView.repaint();
-        });
+        timer = new Timer(tickMillis, e -> gameLoop());
         timer.start();
     }
 
+    private void gameLoop() {
+        maze.updateGame();
+        gameView.updateFrames();
+        if (!maze.isPlayerAlive()) {
+            timer.stop();
+            JOptionPane.showMessageDialog(frame, "Game Over!");
+            frame.dispose();
+            return;
+        }
+        if (maze.isGameWon()) {
+            timer.stop();
+            JOptionPane.showMessageDialog(frame, "You win!");
+            frame.dispose();
+            return;
+        }
+
+        gameView.repaint();
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -82,7 +91,7 @@ public class GameController implements KeyListener, MouseListener {
             cooldown--;
             return;
         }
-        cooldown = delay;
+        cooldown = ATTACK_COOLDOWN_TICKS;
         int mouseX = e.getX();
         int mouseY = e.getY();
         Position targetPos = new Position(mouseX/gameView.getTileSize(), mouseY/gameView.getTileSize());

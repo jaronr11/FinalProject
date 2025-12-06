@@ -10,7 +10,6 @@ public class ProjectileFactory {
         NORMAL_PROJECTILE,
         BURST_PROJECTILE,
         SLOW_PROJECTILE,
-        GOD_MODE
     }
 
 
@@ -40,13 +39,6 @@ public class ProjectileFactory {
                 break;
             case NORMAL_PROJECTILE:
                 projectiles.add(new Projectile(startPos, targetPos, owner));
-                break;
-            case GOD_MODE:
-                Projectile projectile =  new Projectile(startPos, targetPos, owner);
-                projectile.setSpeed(3);
-                projectile.setDamage(100);
-                projectile.setSize(4);
-                projectiles.add(projectile);
                 break;
 
         }

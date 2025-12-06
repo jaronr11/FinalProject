@@ -3,9 +3,8 @@ package MazeGame.model.GameEntities;
 import MazeGame.model.Position;
 
 public class Weapon {
-    Position position;
-    ProjectileFactory.ProjectileType projectileType;
-    ProjectileFactory projectileFactory = new ProjectileFactory();
+    private final Position position;
+    private final ProjectileFactory.ProjectileType projectileType;
 
     public Weapon(ProjectileFactory.ProjectileType projectileType, Position position) {
         this.position = position;

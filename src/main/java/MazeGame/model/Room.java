@@ -102,8 +102,8 @@ public class Room {
         nextLocation = connectingRoom;
     }
     public boolean isWalkable(Position position) {
-        int x = position.x;
-        int y = position.y;
+        int x = position.getX();
+        int y = position.getY();
         if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT) {
             return false;
         }

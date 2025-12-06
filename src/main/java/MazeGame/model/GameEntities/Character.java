@@ -8,7 +8,7 @@ public abstract class Character {
     private double health;
     private Position position;
     private ProjectileFactory.ProjectileType projectileType;
-    private final int MOVE_DISTANCE = 1;
+    private static final int MOVE_DISTANCE = 1;
 
 
     protected void setHealth(double health) {

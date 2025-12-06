@@ -10,7 +10,7 @@ public class Enemy extends Character {
     private int moveCooldown = 0;
     private final int moveDelay = 1;
     private final double DEFAULT_ENEMY_HEALTH = 4.0;
-
+    private static final double PROJECTILE_FIRE_CHANCE = .35;
     public Enemy(MovementStrategy strategy, Position position, double health) {
         this.strategy = strategy;
         setPosition(position);
@@ -32,7 +32,7 @@ public class Enemy extends Character {
     }
 
     void shootProjectile(Room room, Character player) {
-        if (Math.random() < 0.35) { //rng
+        if (Math.random() < PROJECTILE_FIRE_CHANCE) { //rng
             Position bulletStartPos = new Position(getPosition().getX(), getPosition().getY());
             Position targetPos = player.getPosition();
             room.addProjectile(new Projectile(bulletStartPos, targetPos, ProjectileOwner.ENEMY));
