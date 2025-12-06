@@ -89,8 +89,7 @@ public class GameView extends JPanel {
         }
         catch (IOException e) {
             e.printStackTrace();
-            projectileSprite = null;
-            characterSprite = null;
+            return;
         }
         setFocusable(true);
     }
