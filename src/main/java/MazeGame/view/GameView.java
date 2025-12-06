@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class GameView extends JPanel {
-    Maze maze;
-    int TILE_SIZE = 32;
+    private final Maze maze;
+    private static final int TILE_SIZE = 32;
 
     private static final int FRAME_W = 32;
     private static final int FRAME_H = 32;
@@ -28,10 +28,10 @@ public class GameView extends JPanel {
     private BufferedImage[] enemyFrames;
     private BufferedImage[][] tileFrames;
     private BufferedImage[] smokeFrames;
-    BufferedImage obstacleSprite;
-    BufferedImage doorSprite;
-    BufferedImage doorOpenSprite;
-    BufferedImage chestSprite;
+    private BufferedImage obstacleSprite;
+    private BufferedImage doorSprite;
+    private BufferedImage doorOpenSprite;
+    private BufferedImage chestSprite;
 
 
     private int currentFrame = 0;
