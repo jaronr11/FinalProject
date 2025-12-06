@@ -31,6 +31,7 @@ public class GameView extends JPanel {
     BufferedImage obstacleSprite;
     BufferedImage doorSprite;
     BufferedImage doorOpenSprite;
+    BufferedImage chestSprite;
 
 
     private int currentFrame = 0;
@@ -49,6 +50,7 @@ public class GameView extends JPanel {
             characterSprite =  loadSprite("images/character.png");
             tileSprite = loadSprite("images/tiles.png");
             obstacleSprite = loadSprite("images/obstacle.png");
+            chestSprite = loadSprite("images/chest.png");
             doorSprite = loadSprite("images/door.png");
             doorOpenSprite = loadSprite("images/doorOpen.png");
 
@@ -177,8 +179,7 @@ public class GameView extends JPanel {
             Position pos = weapon.getPosition();
             int px =  pos.getX() *TILE_SIZE;
             int py =   pos.getY() *TILE_SIZE;
-            g.setColor(Color.BLACK);
-            g.fillOval(px, py, TILE_SIZE/2, TILE_SIZE/2);
+            g.drawImage(chestSprite, (int) px, (int) py, TILE_SIZE, TILE_SIZE, null);
         }
     }
     public void paintSmoke(Graphics g) {
