@@ -5,25 +5,30 @@ import MazeGame.model.Position;
 import MazeGame.model.Room;
 
 public abstract class Character {
-    protected double health;
-    protected Position position;
-    protected Direction lastDirection = Direction.DOWN;
-    protected ProjectileFactory.ProjectileType projectileType;
-    protected final int MOVE_DISTANCE = 1;
+    private double health;
+    private Position position;
+    private ProjectileFactory.ProjectileType projectileType;
+    private final int MOVE_DISTANCE = 1;
+
+
+    protected void setHealth(double health) {
+        this.health = health;
+    }
+
+    protected void setPosition(Position position) {
+        this.position = position;
+    }
+
 
     public void loseHealth(double health) {
         this.health -= health;
     }
-    public void gainHealth(double health) {
-        this.health += health;
-    }
+
 
     public Position getPosition() {
         return position;
     }
-    public void setPosition(Position position) {
-        this.position = position;
-    }
+
     public boolean isAlive() {
         return health >0;
     }
@@ -45,7 +50,6 @@ public abstract class Character {
         };
     }
     public void move(Direction direction, Room currentRoom) {
-        this.lastDirection = direction;
         Position newPosition = getNewPosition(direction);
         if (currentRoom.isWalkable(newPosition)) {
             this.position = newPosition;

@@ -2,24 +2,19 @@ package MazeGame.model.GameEntities;
 
 import MazeGame.model.*;
 import MazeGame.model.MovementStrategies.MovementStrategy;
+import MazeGame.model.MovementStrategies.NoMoveStrategy;
 import MazeGame.model.MovementStrategies.RandomMoveStrategy;
 
 public class Enemy extends Character {
-    MovementStrategy strategy;
+    private final MovementStrategy strategy;
     private int moveCooldown = 0;
     private final int moveDelay = 1;
+    private final double DEFAULT_ENEMY_HEALTH = 4.0;
 
-    private final double DEFAULT_ENEMY_HEALTH = 5.0;
-
-    public Enemy() {
-        this.strategy = new RandomMoveStrategy();
-        this.position = new Position(0,0);
-        this.health = DEFAULT_ENEMY_HEALTH;
-    }
     public Enemy(MovementStrategy strategy, Position position, double health) {
         this.strategy = strategy;
-        this.position = position;
-        this.health = health;
+        setPosition(position);
+        setHealth(health);
     }
     @Override
     public void doAction(Room room, Character player) {
@@ -29,7 +24,7 @@ public class Enemy extends Character {
             return;
         }
         moveCooldown = moveDelay;
-        Direction moveDir = strategy.move(position, player);
+        Direction moveDir = strategy.move(getPosition(), player);
 
         move(moveDir, room);
         shootProjectile(room, player);
@@ -38,7 +33,7 @@ public class Enemy extends Character {
 
     void shootProjectile(Room room, Character player) {
         if (Math.random() < 0.35) { //rng
-            Position bulletStartPos = new Position(this.position.getX(), this.position.getY());
+            Position bulletStartPos = new Position(getPosition().getX(), getPosition().getY());
             Position targetPos = player.getPosition();
             room.addProjectile(new Projectile(bulletStartPos, targetPos, ProjectileOwner.ENEMY));
         }
