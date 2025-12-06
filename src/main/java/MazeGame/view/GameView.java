@@ -8,12 +8,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import java.util.Iterator;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class GameView extends JPanel {
     private final Maze maze;
@@ -46,13 +43,13 @@ public class GameView extends JPanel {
         BufferedImage tileSprite;
 
         try {
-            projectileSprite = loadSprite("images/projectile.png");
-            characterSprite =  loadSprite("images/character.png");
-            tileSprite = loadSprite("images/tiles.png");
-            obstacleSprite = loadSprite("images/obstacle.png");
-            chestSprite = loadSprite("images/chest.png");
-            doorSprite = loadSprite("images/door.png");
-            doorOpenSprite = loadSprite("images/doorOpen.png");
+            projectileSprite = loadSprite("/images/projectile.png");
+            characterSprite =  loadSprite("/images/character.png");
+            tileSprite = loadSprite("/images/tiles.png");
+            obstacleSprite = loadSprite("/images/obstacle.png");
+            chestSprite = loadSprite("/images/chest.png");
+            doorSprite = loadSprite("/images/door.png");
+            doorOpenSprite = loadSprite("/images/doorOpen.png");
 
             SpriteSheet characterSheet = new SpriteSheet(characterSprite);
             SpriteSheet projectileSheet = new SpriteSheet(projectileSprite);
@@ -81,7 +78,7 @@ public class GameView extends JPanel {
                 }
             }
             //load smoke effects
-            smokeFrames = loadGifFrames("images/smoke.gif");
+            smokeFrames = loadGifFrames("/images/smoke.gif");
             for (int i = 0; i<smokeFrames.length; i++) {
                 BufferedImage full = smokeFrames[i];
                 smokeFrames[i] = full.getSubimage(768,0,192,192);
@@ -152,10 +149,11 @@ public class GameView extends JPanel {
             }
         }
     }
-
-    BufferedImage loadSprite(String filePath) throws IOException {
-        return ImageIO.read(new File(filePath));
+    //Load sprite code with path from AI
+    BufferedImage loadSprite(String path) throws IOException {
+        return ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)));
     }
+
     public void paintCharacters(Graphics g) {
         List<Character> enemies = maze.getCurrentRoom().getEnemies();
         Position playerPos = maze.getPlayer().getPosition();
@@ -214,35 +212,20 @@ public class GameView extends JPanel {
         return TILE_SIZE;
     }
     //Load gif frames code from AI
-    private BufferedImage[] loadGifFrames(String filePath) throws IOException {
-        File file = new File(filePath);
-        ImageInputStream stream = ImageIO.createImageInputStream(file);
-
-        if (stream == null) {
-            throw new IOException("Could not open " + filePath);
-        }
-
-        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("gif");
-        if (!readers.hasNext()) {
-            stream.close();
-            throw new IOException("No GIF reader available");
-        }
-
-        ImageReader reader = readers.next();
-        reader.setInput(stream);
+    private BufferedImage[] loadGifFrames(String path) throws IOException {
+        var stream = getClass().getResourceAsStream(path);
+        var reader = ImageIO.getImageReadersByFormatName("gif").next();
+        reader.setInput(ImageIO.createImageInputStream(stream));
 
         int numFrames = reader.getNumImages(true);
         BufferedImage[] frames = new BufferedImage[numFrames];
-
         for (int i = 0; i < numFrames; i++) {
-            frames[i] = reader.read(i);  // each frame is a full image
+            frames[i] = reader.read(i);
         }
-
         reader.dispose();
-        stream.close();
-
         return frames;
     }
+
 
 
 }
