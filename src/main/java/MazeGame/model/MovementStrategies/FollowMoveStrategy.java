@@ -4,7 +4,7 @@ import MazeGame.model.Direction;
 import MazeGame.model.GameEntities.Character;
 import MazeGame.model.Position;
 
-public class FollowMove implements MovementStrategy {
+public class FollowMoveStrategy implements MovementStrategy {
 
 
     @Override
